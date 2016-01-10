@@ -14,3 +14,27 @@ College project - Using AI techniques to analyse and evaluate snooker broadcast 
 * Create a front-end and messaging service to allow the data from the algorithms to be parsed.
 * Evaluate and analyse the results.
 * Write the report. 
+
+### TIMELINE ###
+
+> - Lit Survey
+> > - ANN History
+> > - Image Recognition
+> > - Object Tracking
+> - Collect Data
+> > - Establish Quality
+> > - Search Videos
+> > > - Extract Images
+> > > - Script Process
+> - Detect Objects
+> > - Compare Options
+> > - Create POC
+> > > - ANN Approach
+> > > - Classic Approach
+> > - Develop Winner
+> > > - Development Plan
+> > > > - Evaluate Frameworks
+> > > > - Class Diagram
+> > > - Code Algorithms
+> > > - Train in AWS
+> - Track Objects
