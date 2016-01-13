@@ -1,0 +1,26 @@
+Using Artificial Intelligence Techniques to Analyse and Evaluate Snooker Broadcast Videos
+
+James Coulson: 111247132
+2016-01-15
+Computing and Information Systems
+Self-Study
+
+Introduction
+
+The main objective of this is to explore various computer vision techniques for real-time analysis of images. The idea came from work – I work in an online gambling company and it was mentioned that “in-running” model's could not be created for snooker as there was no data currently available. After reading around the subject somewhat I thought it might be possible to glean enough data from matches broadcast online or on TV using computer vision techniques to create the models necessary 
+
+Relevant courses
+Artificial Intelligence; Neural Networks; Software Engineering, Algorithm Design and Analysis; Databases; Combinatorial Optimisation; 
+
+Aim:
+To use artificial intelligence techniques to analyse and evaluate snooker broadcast videos.
+
+Objectives:
+- Perform a literary survey on the use of artificial intelligence in computer vision.
+- Collect data to use in developing and evaluating a tracking engine.
+- Develop and compare AI methods for detecting objects on screen.
+- Develop and compare AI methods for tracking the movement of objects on screen in real time.
+- Develop a snooker rules engine to allow the extraction of meaningful data from the vision algorithms. 
+- Create a front-end and messaging service to allow the data from the algorithms to be parsed.
+- Evaluate and analyse the results.
+- Write the report. 
