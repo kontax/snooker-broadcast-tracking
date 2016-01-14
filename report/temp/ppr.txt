@@ -5,22 +5,35 @@ James Coulson: 111247132
 Computing and Information Systems
 Self-Study
 
+
+
 Introduction
 
-The main objective of this is to explore various computer vision techniques for real-time analysis of images. The idea came from work – I work in an online gambling company and it was mentioned that “in-running” model's could not be created for snooker as there was no data currently available. After reading around the subject somewhat I thought it might be possible to glean enough data from matches broadcast online or on TV using computer vision techniques to create the models necessary 
+The main objective of this is to explore various computer vision techniques for real-time analysis of snooker matches. The idea came from work – I work in an online gambling company and it was mentioned that “in-running” betting models could not currently be created for snooker as there was no live data available. While the idea stemmed from work there are no commitments regarding output for work, and no deadlines other than those set by the university, all work is done entirely in my own time and without external resources.
+
+In-running betting is defined as taking bets on a sporting event while it is currently live, for example offering odds on who's going to score next in a football match, or who will win the next game in tennis. In order to offer these odds to customers, quantitative analysts build models which try to offer the most compelling initial prices while still making a profit for the company, which can then be tweaked by any traders in real time (citation needed). In order to create these models a large amount of data is gathered and used to predict potential outputs and their likelihood. Once the models are created, a live stream of data is required to put the model to use. The aims of this project hope to cater to that need.
 
 Relevant courses
-Artificial Intelligence; Neural Networks; Software Engineering, Algorithm Design and Analysis; Databases; Combinatorial Optimisation; 
+Artificial Intelligence; Neural Networks; Software Engineering, Algorithm Design and Analysis; Databases; Operations Research and Combinatorial Optimisation; 
 
-Aim:
-To use artificial intelligence techniques to analyse and evaluate snooker broadcast videos.
+
+
+Aims and Objectives
+
+The main aim of the project is as follows:
+- To use artificial intelligence techniques to analyse and evaluate snooker broadcast videos, and to extract usable data from them.
 
 Objectives:
-- Perform a literary survey on the use of artificial intelligence in computer vision.
-- Collect data to use in developing and evaluating a tracking engine.
-- Develop and compare AI methods for detecting objects on screen.
-- Develop and compare AI methods for tracking the movement of objects on screen in real time.
-- Develop a snooker rules engine to allow the extraction of meaningful data from the vision algorithms. 
-- Create a front-end and messaging service to allow the data from the algorithms to be parsed.
-- Evaluate and analyse the results.
-- Write the report. 
+- Literary Survey: A review of the image recognition techniques that have been used successfully (or otherwise) and if and how they may be applied to real-time processing and tracking.
+- Data Collection: Collect enough video data of live matches to analyse and use in the methods specified.
+- Compare Methods: Build some proof of concept algorithms using the data collected and analyse the results, ultimately choosing the most suitable method to implement in the final program.
+- Data Context: Develop an engine which configures the rules for snooker so as the data can be contextualized within the program.
+- Frontend Development: Create a messaging API to ultimately allow models to subscribe to, as well as a GUI for anyone who needs to view the output data.
+- Evaluation and Analysis: Write up an evaluation outlining the solution built.
+- Conclusion and future work.
+
+
+
+Methods
+
+After reading around the subject somewhat I thought it might be possible to glean enough data from matches broadcast online or on TV using computer vision techniques to retrieve the required data. With the amount of processing power currently available computer vision is becoming feasible (cite). There are various different techniques
