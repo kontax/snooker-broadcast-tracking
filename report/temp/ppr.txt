@@ -8,8 +8,11 @@ Self-Study
 
 Acronyms
 
+ANN: Aritificial Neural Network
 CV: Computer Vision
+GUI: Graphical User Interface
 PoC: Proof of Concept
+TDD: Test Driven Development
 
 
 
@@ -46,6 +49,20 @@ From early beginnings where a professor in MIT postulated that it would take a f
 
 The first stage necessary will be to collect data to train on. This will be in the form of good quality videos of snooker matches that have been broadcast and uploaded online. Ideally all videos will be of an HD 720p quality, although if time permits then using lower quality data will also be considered. A large amount of data will be necessary in order to train the models on, whether it be neural networks which take a large amount of training data (cite), or another feature detector such as SURF (cite) to test against.
 
-Once the data has been collected, then basic CV methods will be designed as a proof of concept and tested for suitability. The accuracy of the PoC's will need to be established using analytical techniques such as (cite example), and ultimately the most performant algorithm will be implemented into a working piece of software. In order to draw context and semantic information out of matches, a rules engine will also need to be developed 
+Once the data has been collected, then basic CV methods will be designed as a proof of concept and tested for suitability. The accuracy of the PoC's will need to be established using analytical techniques such as (cite example), and ultimately the most performant algorithm will be implemented into a working piece of software. In order to draw context and semantic information out of matches, a rules engine will also need to be developed allowing the detection software to establish information about the current state of the match. This will involve creating a database containing the rules, as well as an API to allow other software to extract information from it. A Software Requirements System will be written prior to development in order to outline the required functionality of the algorithms, and then unit and integration tests will be written during development using a Test Driven Development (TDD) methodology (cite). If the method chosen is one which involves training, then an AWS cluster may be spun up, depending on the requirements of the training methods. This can be scripted using such tools as (cite).
 
-After reading around the subject somewhat I thought it might be possible to glean enough data from matches broadcast online or on TV using computer vision techniques to retrieve the required data. With the amount of processing power currently available computer vision is becoming feasible (cite). There are various different techniques
+The ultimate use of the application will come in the form of a messaging API which will allow other software to parse the information that the CV algorithm collates. It will be possible to plug into the information being gathered by the CV algorithm and evaluated within the rules engine, allowing the user to parse whatever data necesary to perform real-time analysis of the match. If time permits, then a GUI will be developed displaying the position of each snooker ball on the table. This is a secodary objective however, as the necessary functionality can be performed without any frontend.
+
+
+
+Project Plan
+
+Collapsed plan here
+Appendix showing full plan
+
+
+
+Progress To Date
+
+The first stage of the project was to perform a literary survey of CV and ANN's. To start with, a history of computer vision was reviewed, starting from 1963 where Roberts attempted to using CV techniques to detect 3D objects. 
+
