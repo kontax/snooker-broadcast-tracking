@@ -92,4 +92,16 @@ Planned Work
 
 The next step of the project is to start researching a developing a few select options to compare. This will involve a Neural Network options as well as at least one other method for detecting images. Once the options have been finalised, a PoC with minimal functionality will be created for each option in order to test the results at a basic level. These results then need to be analysed and compared in order to find out which performs the best. There are a number of libraries which can help in this instance, for instance Theano (cite) and OpenCV (cite).
 
-Upon picking a solution to work with, a fully fledged application will be developed for use. This will start with a Software Requirements Specification (SRS) outlining the functionality of the system.
+Upon picking a solution to work with, a fully fledged application will be developed for use. This will start with a Software Requirements Specification (SRS) outlining the functionality of the system. This will be proceeded by development using the TDD approach (cite). One advantage to this approach is that test coverage is present throughout the application, meaning any changes made will be covered in case they break the codebase. The resulting software will then need to be trained on the data collected, and the results analysed. This whole development section will be more of a cyclicle development cycle which isn't present in the Gantt chart plan. Tests such as processing time and accuracy are key too, as an inaccurate or slow program is of little use. This will be done after the functionality, as "Premature optimization is the root of all evil" (cite).
+
+The final step is to create the user interface, of which the main deliverable is the API parsing the data. This will be in the form of a messaging service, as the data will be parsed in real-time meaning that any software using the data will be getting snapshots of the current state of the match being parsed. A nice to have would be a GUI frontend outlining the table and the current placement of the balls on it.
+
+Throughout this process the final report will be ongoing, and during each stage it will be updated with any additions or ammendments, rather than asving it for when the development and analysis has been complete.
+
+
+
+Appendices
+
+
+
+References
