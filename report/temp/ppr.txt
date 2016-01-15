@@ -6,6 +6,12 @@ Computing and Information Systems
 Self-Study
 
 
+Acronyms
+
+CV: Computer Vision
+PoC: Proof of Concept
+
+
 
 Introduction
 
@@ -35,5 +41,11 @@ Objectives:
 
 
 Methods
+
+From early beginnings where a professor in MIT postulated that it would take a few PhD students no longer than a summer to crack resulting in the Computer Vision Club (cite), to today where hundreds of levels deep neural networks are currently being employed using clusters of GPU's for massive parallelism (cite MS wired article), processing power is finally reaching a stage whereby computer vision (CV) is becoming mainstream (cite examples). This project will attempt to implement one of these techniques into a functional piece of software to allow information to be parsed from snooker matches.
+
+The first stage necessary will be to collect data to train on. This will be in the form of good quality videos of snooker matches that have been broadcast and uploaded online. Ideally all videos will be of an HD 720p quality, although if time permits then using lower quality data will also be considered. A large amount of data will be necessary in order to train the models on, whether it be neural networks which take a large amount of training data (cite), or another feature detector such as SURF (cite) to test against.
+
+Once the data has been collected, then basic CV methods will be designed as a proof of concept and tested for suitability. The accuracy of the PoC's will need to be established using analytical techniques such as (cite example), and ultimately the most performant algorithm will be implemented into a working piece of software. In order to draw context and semantic information out of matches, a rules engine will also need to be developed 
 
 After reading around the subject somewhat I thought it might be possible to glean enough data from matches broadcast online or on TV using computer vision techniques to retrieve the required data. With the amount of processing power currently available computer vision is becoming feasible (cite). There are various different techniques
