@@ -14,6 +14,7 @@ CV: Computer Vision
 GUI: Graphical User Interface
 PoC: Proof of Concept
 TDD: Test Driven Development
+SRS: Software Requirements Specification
 
 
 
@@ -65,6 +66,8 @@ Appendix showing full plan
 
 Progress To Date
 
+Literary Survey
+
 The first stage of the project was to perform a literary survey of CV and ANN's. To start with, a history of computer vision was reviewed, starting from 1963 where Roberts attempted to using CV techniques to detect 3D objects (cite). Another attempt at tackling CV was made by the Summer Vision Project, which grossly underestimated the amount of work that was necessary (cite) (cite xkcd).
 
 The initial use of Neural Networks for CV begun with Rosenblatt's seminal paper on Perceptrons (cite). This proved to be a false dawn for the advent of ANN's as field tests of the algorithm failed (cite), mainly down to their lack of ability around learning non-linear problems (cite XOR problem). Work on ANN's was pretty much halted after Paper and Minsky's book debunking the use of Perceptrons, with researchers spending more time concentrating on pixel-level detection such as edge detection (cite) and feature detection algorithms such as those using Hough Transforms (cite).
@@ -73,3 +76,20 @@ ANN's started to pick up traction again during the 80's, with one of the first e
 
 Findings in other CV techniques have been also been accelerating since the 90's such as SIFT (cite) which uses feature detection to describe features, and SUSAN (cite) which uses processing techniques around detecting corners and images. As well as classifying images, tracking objects within video streams has also been researched, applying many of the image detection algorithms in real time. Methods such as particle and Kalman filters (cite) have been used in order to track cars in surveillance cameras (cite), as well as balls in sporting events (cite). Some of these algorithms have even managed to be applied to extracting semantic information from sporting events (cite), similar to the end goal of this project.
 
+Data Collection
+
+In order to train and validate the CV techniques a lot of data needs to be collected. This was achieved by scouring YouTube (cite) for a number of video's and downloading them. The initial search was a very manual technique, with all the URL's needing to be manually checked and validated. Once the URL's were collected, they were entered into a PostgreSQL (cite) database, with the script added to version control for future usage (assuming they're not taken down in the future). Once all the URL's were collected, the video's were downloaded using youtube-dl and stored on disk for future use. Only video's longer than 20 minutes in HD were considered, which allowed plenty of full length matches to be collected. There are currently 20 videos containing over 60 hours of footage, which works out at over 150GB so far. This is still work in progress, and will be increased if necessary.
+
+I've also created a script to sample random images from the videos in case they're necessary to train on. Currently this simply pulls images at random, although in future I hope to only pull images that are necessary, for example only those that are using the top-down view at the end of the table, should this be required. One of the risks with having such a large amount of data is actually being able to process it all. In case the computing power I can access at work or at home is not sufficient, some Amazon AWS clusters will be set up to try and take advantage of their parallel capabilities.
+
+Plan Timelines
+
+Currently I'm behind schedule with regards to my project plan, mainly due to work commitments before Christmas. I've only managed to perform the literary survey and data collection up until now, however I have not yet started development of options used to detect objects, despite taking into account considerations with regards to Christmas holidays. I'm currently about 2 weeks behind, however with more free time available soon it should be possible to catch up.
+
+
+
+Planned Work
+
+The next step of the project is to start researching a developing a few select options to compare. This will involve a Neural Network options as well as at least one other method for detecting images. Once the options have been finalised, a PoC with minimal functionality will be created for each option in order to test the results at a basic level. These results then need to be analysed and compared in order to find out which performs the best. There are a number of libraries which can help in this instance, for instance Theano (cite) and OpenCV (cite).
+
+Upon picking a solution to work with, a fully fledged application will be developed for use. This will start with a Software Requirements Specification (SRS) outlining the functionality of the system.
