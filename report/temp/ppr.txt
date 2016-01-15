@@ -8,7 +8,8 @@ Self-Study
 
 Acronyms
 
-ANN: Aritificial Neural Network
+ANN: Artificial Neural Network
+CNN: Convolutional Neural Network
 CV: Computer Vision
 GUI: Graphical User Interface
 PoC: Proof of Concept
@@ -37,7 +38,7 @@ Objectives:
 - Data Collection: Collect enough video data of live matches to analyse and use in the methods specified.
 - Compare Methods: Build some proof of concept algorithms using the data collected and analyse the results, ultimately choosing the most suitable method to implement in the final program.
 - Data Context: Develop an engine which configures the rules for snooker so as the data can be contextualized within the program.
-- Frontend Development: Create a messaging API to ultimately allow models to subscribe to, as well as a GUI for anyone who needs to view the output data.
+- Front-end Development: Create a messaging API to ultimately allow models to subscribe to, as well as a GUI for anyone who needs to view the output data.
 - Evaluation and Analysis: Write up an evaluation outlining the solution built.
 - Conclusion and future work.
 
@@ -45,13 +46,13 @@ Objectives:
 
 Methods
 
-From early beginnings where a professor in MIT postulated that it would take a few PhD students no longer than a summer to crack resulting in the Computer Vision Club (cite), to today where hundreds of levels deep neural networks are currently being employed using clusters of GPU's for massive parallelism (cite MS wired article), processing power is finally reaching a stage whereby computer vision (CV) is becoming mainstream (cite examples). This project will attempt to implement one of these techniques into a functional piece of software to allow information to be parsed from snooker matches.
+From early beginnings where a professor in MIT postulated that it would take a few PhD students no longer than a summer to crack resulting in the Summer Vision Project (cite), to today where hundreds of levels deep neural networks are currently being employed using clusters of GPU's for massive parallelism (cite MS wired article), processing power is finally reaching a stage whereby computer vision (CV) is becoming mainstream (cite examples). This project will attempt to implement one of these techniques into a functional piece of software to allow information to be parsed from snooker matches.
 
 The first stage necessary will be to collect data to train on. This will be in the form of good quality videos of snooker matches that have been broadcast and uploaded online. Ideally all videos will be of an HD 720p quality, although if time permits then using lower quality data will also be considered. A large amount of data will be necessary in order to train the models on, whether it be neural networks which take a large amount of training data (cite), or another feature detector such as SURF (cite) to test against.
 
-Once the data has been collected, then basic CV methods will be designed as a proof of concept and tested for suitability. The accuracy of the PoC's will need to be established using analytical techniques such as (cite example), and ultimately the most performant algorithm will be implemented into a working piece of software. In order to draw context and semantic information out of matches, a rules engine will also need to be developed allowing the detection software to establish information about the current state of the match. This will involve creating a database containing the rules, as well as an API to allow other software to extract information from it. A Software Requirements System will be written prior to development in order to outline the required functionality of the algorithms, and then unit and integration tests will be written during development using a Test Driven Development (TDD) methodology (cite). If the method chosen is one which involves training, then an AWS cluster may be spun up, depending on the requirements of the training methods. This can be scripted using such tools as (cite).
+Once the data has been collected, then basic CV methods will be designed as a proof of concept and tested for suitability. The accuracy of the PoC's will need to be established using analytical techniques such as (cite example), and ultimately the best performing algorithm will be implemented into a working piece of software. In order to draw context and semantic information out of matches, a rules engine will also need to be developed allowing the detection software to establish information about the current state of the match. This will involve creating a database containing the rules, as well as an API to allow other software to extract information from it. A Software Requirements System will be written prior to development in order to outline the required functionality of the algorithms, and then unit and integration tests will be written during development using a Test Driven Development (TDD) methodology (cite). If the method chosen is one which involves training, then an AWS cluster may be spun up, depending on the requirements of the training methods. This can be scripted using such tools as (cite).
 
-The ultimate use of the application will come in the form of a messaging API which will allow other software to parse the information that the CV algorithm collates. It will be possible to plug into the information being gathered by the CV algorithm and evaluated within the rules engine, allowing the user to parse whatever data necesary to perform real-time analysis of the match. If time permits, then a GUI will be developed displaying the position of each snooker ball on the table. This is a secodary objective however, as the necessary functionality can be performed without any frontend.
+The ultimate use of the application will come in the form of a messaging API which will allow other software to parse the information that the CV algorithm collates. It will be possible to plug into the information being gathered by the CV algorithm and evaluated within the rules engine, allowing the user to parse whatever data necessary to perform real-time analysis of the match. If time permits, then a GUI will be developed displaying the position of each snooker ball on the table. This is a secondary objective however, as the necessary functionality can be performed without any front-end.
 
 
 
@@ -64,5 +65,11 @@ Appendix showing full plan
 
 Progress To Date
 
-The first stage of the project was to perform a literary survey of CV and ANN's. To start with, a history of computer vision was reviewed, starting from 1963 where Roberts attempted to using CV techniques to detect 3D objects. 
+The first stage of the project was to perform a literary survey of CV and ANN's. To start with, a history of computer vision was reviewed, starting from 1963 where Roberts attempted to using CV techniques to detect 3D objects (cite). Another attempt at tackling CV was made by the Summer Vision Project, which grossly underestimated the amount of work that was necessary (cite) (cite xkcd).
+
+The initial use of Neural Networks for CV begun with Rosenblatt's seminal paper on Perceptrons (cite). This proved to be a false dawn for the advent of ANN's as field tests of the algorithm failed (cite), mainly down to their lack of ability around learning non-linear problems (cite XOR problem). Work on ANN's was pretty much halted after Paper and Minsky's book debunking the use of Perceptrons, with researchers spending more time concentrating on pixel-level detection such as edge detection (cite) and feature detection algorithms such as those using Hough Transforms (cite).
+
+ANN's started to pick up traction again during the 80's, with one of the first explorations of the deep learning architecture (cite). This was largely down to the re-discovery of the back-propagation algorithm (cite x2), which allowed ANN's to fit to non-linear output and converge to an optimal error state quickly. A paper by LeCun (cite) re-introduced a type of ANN called the convolutional neural network (CNN), which implemented the back-propagation algorithm and applied it to character recognition. The use of these CNN's when applied to deep learning techniques have revolutionised the image recognition to an almost human level (cite).
+
+Findings in other CV techniques have been also been accelerating since the 90's such as SIFT (cite) which uses feature detection to describe features, and SUSAN (cite) which uses processing techniques around detecting corners and images. As well as classifying images, tracking objects within video streams has also been researched, applying many of the image detection algorithms in real time. Methods such as particle and Kalman filters (cite) have been used in order to track cars in surveillance cameras (cite), as well as balls in sporting events (cite). Some of these algorithms have even managed to be applied to extracting semantic information from sporting events (cite), similar to the end goal of this project.
 
