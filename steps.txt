@@ -1,0 +1,20 @@
+Lit Review
+----
+- ANN history
+- Computer vision
+- Object detection
+- Multiple object detection
+- Counting
+- Tracking
+- Software
+
+Data Collection
+----
+- Script youtube download
+- Get large and small videos
+- Convert videos: for i in *.mp4; do ffmpeg -i $i -vf scale=426:240 fixed/$i; done
+    - This scales them all to the largest aspect ratio in the batch
+- Install opencv for python
+- Extract random images from the short video's using the extract_images.py script
+
+
