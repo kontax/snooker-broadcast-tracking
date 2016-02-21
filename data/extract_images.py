@@ -1,39 +1,36 @@
 #!/usr/bin/env python2
 # Extracts a selection of random images from the downloaded videos and saves them to a folder
 
-import sys
-import getopt
+import cv2
 import random
-import imageio
 from os import listdir
-from os.path import isfile, join, basename, dirname
+from os.path import isfile, join
 
-def main(argv):
+random.seed(10)
+images_to_extract = 50 # The number of images to extract from each video
+directory_name = '../../data/short_videos/fixed/'
+video_extension = '.mp4'
+files = [f for f in listdir(directory_name) if isfile(join(directory_name, f))]
 
-    arg = argv[1]
-    video = basename(arg)
-    directory_name = dirname(arg) + '/'
+for video in files:
+    print video
 
-
-    random.seed(10)
-    images_to_extract = 50
-    #directory_name = '../../data/short_videos/fixed/'
-    video_extension = '.mp4'
-    #files = [f for f in listdir(directory_name) if isfile(join(directory_name, f))]
-
-    #for video in files:
-
+    # Get the autonumber created from youtube-dl for reference
     filename = video[:5]
     full_filename = directory_name + video
-    with imageio.get_reader(full_filename, 'ffmpeg') as vid:
-        frame_count = vid.get_meta_data()['nframes']
 
-        for i in range(0,images_to_extract):
-            random_number = random.randint(0, frame_count)
-            #print random_number
-            image = vid.get_data(random_number-1)
-            image_filename = filename + '-' + '{0:02d}'.format(i) + '.jpg'
-            imageio.imwrite(directory_name + '../images/' + image_filename, image)
+    # Load the video into the script and get the number of frames in it
+    cap = cv2.VideoCapture(full_filename)
+    frame_count = cap.get(7)
 
-if __name__ == "__main__":
-    main(sys.argv)
+    for i in range(0, images_to_extract):
+
+        # Get a random frame from the video and save it
+        random_number = random.randint(0, frame_count-1)
+        cap.set(1, random_number)
+        ret, image = cap.read()
+        image_filename = filename + '-' + '{0:02d}'.format(i) + '.jpg'
+        cv2.imwrite(directory_name + '../images/' + image_filename, image)
+
+    # Make sure to close the capture class or all sorts of problems will happen
+    cap.release()
