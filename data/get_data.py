@@ -15,10 +15,11 @@ import youtube_dl
 
 def main():
     # Get the save location and URL's for the youtube video's to download
-    #video_location = '../../data/videos/'
-    video_location = '../../data/short_videos/'
-    youtube_url_file_location = 'short_videos.txt'
-    ydl_opts = get_youtube_dl_options("short", video_location)
+    video_location = '../../data/videos/'
+    #video_location = '../../data/short_videos/'
+    #youtube_url_file_location = 'short_videos.txt'
+    youtube_url_file_location = 'files.txt'
+    ydl_opts = get_youtube_dl_options("long", video_location)
 
     download_videos(video_location, youtube_url_file_location, ydl_opts)
 

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Tag snooker images</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        
+    </head>
+
+    <body>
+
+        <div class="container">
+
+            <div class="center-block">
+                <h1>Pick an option</h1>
+            </div>
+
+            <div class="col-xs-12 center-block">
+                <p>
+                    The goal of tagging these images is to get training data for the neural network.
+                    We need to detect whether the the image being shown is the full table from the main
+                    view (where the camera is facing straight down the table), and the full table is
+                    shown without any missing edges. If so, then press the "Yes" button, otherwise
+                    choose "No".
+                </p>
+                <p>
+                    If the same tag is selected 3 times for an image it will disappear, however if a
+                    tag is different from something that was selected previously, then all the tags
+                    for the image are reset.
+                </p>
+            </div>
+
+            {{{body}}}
+
+        </div>
+
+    </body>
+</html>

@@ -16,5 +16,12 @@ Data Collection
     - This scales them all to the largest aspect ratio in the batch
 - Install opencv for python
 - Extract random images from the short video's using the extract_images.py script
+- Create a web-page to allow tagging of images, note the following references:
+    - http://tutorialzine.com/2014/01/nodejs-picture-voting-game-part-2/
+      This site had the basic picture choosing methodology, and contained most of the
+      information necessary to copy over.
+    - http://blog.modulus.io/nodejs-and-sqlite
+      Had information on using NodeJS with SQLite
+
 
 

@@ -1,0 +1,33 @@
+
+{{#if image}}
+
+<div class="row">
+    <div class="col-xs-12">
+        <img class="img-responsive center-block" src="images/{{image.path}}" />
+    </div>
+</div>
+
+<div class="row">
+    <br />
+</div>
+
+<div class="col-xs-12">
+    <div class="col-xs-6">
+        <form action="./yes" method="post">
+            <input type="hidden" name="image" value="{{image.path}}" />
+            <input class="btn btn-primary btn-lg btn-block" type="submit" value="Yes" />
+        </form>
+    </div>
+    <div class="col-xs-6">
+        <form action="./no" method="post">
+            <input type="hidden" name="image" value="{{image.path}}" />
+            <input class="btn btn-primary btn-lg btn-block" type="submit" value="No" />
+        </form>
+    </div>
+</div>
+
+{{else}}
+
+<h3>All done, no more images to tag</h3>
+
+{{/if}}
