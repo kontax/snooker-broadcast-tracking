@@ -23,5 +23,16 @@ Data Collection
     - http://blog.modulus.io/nodejs-and-sqlite
       Had information on using NodeJS with SQLite
 
+Network Training
+---
+- Train a table recognition network using the CIFAR model from TensorFlow
+    - Took forever to figure this out
+    - Just the initial network used to try things out
+    - Compared:
+        - TensorFlow
+        - Theano
+        - Caffe
+        - CNTK
+
 
 
