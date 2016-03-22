@@ -33,6 +33,7 @@ Network Training
         - Theano
         - Caffe
         - CNTK
-
-
+    - Went with Caffe as TensorFlow can't handle videos
+    - Checked out Darknet (YOLO paper)
+    - Created Amazon AWS AMI containing Caffe and Jupyter for future
 
