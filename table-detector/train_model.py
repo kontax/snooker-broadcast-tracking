@@ -30,8 +30,9 @@ TEST_BATCH_SIZE = 100  # Batch size to use for testing
 SOLVER_PROTOTXT = 'solver.prototxt'  # The prototxt file containing model parameters
 
 METHOD = 'CPU'  # Whether to use the CPU or GPU to run the model
-MODEL_OUTPUT = 'output.caffemodel'
-ACCURACY_CHART = 'accuracy.png'
+MODEL_OUTPUT = 'output.caffemodel'  # The trained waits of the model
+MODEL_PTX = 'deploy.prototxt'  # The model prototxt file used in deployment
+ACCURACY_CHART = 'accuracy.png'  # The location to save the accuracy chart
 
 
 def create_lmdb(labels, image_dir, lmdb_dir):
@@ -166,6 +167,8 @@ def train(solver_prototxt, method):
      * net: The trained network of weights
     """
 
+    # Class used to save the accuracy results for plotting at a later stage,
+    # and the network with the trained weights
     class TrainingResults(object):
         pass
 
@@ -224,6 +227,7 @@ def save_accuracy(results, png_location):
     ax1.set_ylabel('train loss')
     ax2.set_ylabel('test accuracy')
     ax2.set_title('Test Accuracy: {:.2f}'.format(results.test_acc[-1]))
+    plt.savefig(png_location)
 
 
 def train_model():
@@ -252,14 +256,13 @@ def train_model():
     print "Training the model"
     results = train(SOLVER_PROTOTXT, METHOD)
 
-    print "Saving the trained model to {0}".format(MODEL_OUTPUT)
+    print "Saving the trained model to {0} and {1}".format(MODEL_OUTPUT, MODEL_PTX)
     results.net.save(MODEL_OUTPUT)
+    with open(MODEL_PTX, 'w') as f:
+        f.write(str(snooker_net(TRAIN_LMDB, TRAIN_BATCH_SIZE, output_type="Deploy")))
 
     print "Saving accuracy chart to {0}".format(ACCURACY_CHART)
     save_accuracy(results, ACCURACY_CHART)
-
-
-    # Test model accuracy & save graph
 
 
 if __name__ == '__main__':
