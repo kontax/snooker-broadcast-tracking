@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # convert.py
-# Converts the image metafiles into something that can be read by darknet
+# Converts the image metafiles into XML annotation files
 # ie. "Label x y w h" in float
 
 from random import randint
