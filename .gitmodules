@@ -1,0 +1,3 @@
+[submodule "tracking-server/py-faster-rcnn"]
+	path = tracking-server/py-faster-rcnn
+	url = https://github.com/kontax/py-faster-rcnn.git
