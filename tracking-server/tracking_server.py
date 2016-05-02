@@ -11,14 +11,21 @@ if __name__ == '__main__':
     # Use RPN for proposals
     caffe_cfg.TEST.HAS_RPN = True
 
-    video = YoutubeVideo(url="https://www.youtube.com/watch?v=RIOi3YKtBcY")
-    model = path.join('py-faster-rcnn', 'data', 'snooker', 'snooker.caffemodel')
-    prototxt = path.join('py-faster-rcnn', 'models', 'snooker_net', 'snooker',
-                         'faster_rcnn_alt_opt', 'faster_rcnn_test.pt')
+    data_path = path.join('py-faster-rcnn', 'data', 'snooker')
+    model_path = path.join('py-faster-rcnn', 'models', 'snooker_net')
+
+    #video = YoutubeVideo(url="https://www.youtube.com/watch?v=RIOi3YKtBcY")
+    video = YoutubeVideo(url="https://www.youtube.com/watch?v=irpfzXXPrX8")
+    model = path.join(data_path, 'snooker.caffemodel')
+    prototxt = path.join(model_path, 'snooker', 'faster_rcnn_alt_opt', 'faster_rcnn_test.pt')
+    table_model = path.join(data_path, 'snooker_table.caffemodel')
+    table_prototxt = path.join(model_path, 'snooker_table', 'snooker_table.pt')
     detector = SnookerDetector(config=cfg,
                                video=video,
                                model=model,
-                               prototxt=prototxt)
+                               prototxt=prototxt,
+                               table_model=table_model,
+                               table_prototxt=table_prototxt)
 
     x = detector.detect()
     counter = 0
