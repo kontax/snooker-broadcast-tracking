@@ -38,7 +38,7 @@ class YoutubeVideo(SnookerVideo):
     def play_video(self):
         """
         Generator used to loop through the video frame by frame.
-        :return: A generator containing a frame each pass.
+        :return: A generator containing a frame each pass as a numpy array.
         """
         cap = self._cap
         while cap.isOpened():
