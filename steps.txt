@@ -25,7 +25,7 @@ Data Collection
 
 Network Training
 ---
-- Train a table recognition network using the CIFAR model from TensorFlow
+- Train a table recognition network using the CIFAR model from Caffe
     - Took forever to figure this out
     - Just the initial network used to try things out
     - Compared:
@@ -36,4 +36,30 @@ Network Training
     - Went with Caffe as TensorFlow can't handle videos
     - Checked out Darknet (YOLO paper)
     - Created Amazon AWS AMI containing Caffe and Jupyter for future
+- Create a small script using the model output to test videos
 
+More Data Collection
+---
+- Extract images showing the full table using the model trained above
+- Create a program to label the locations of the balls and playing surface
+- Increase the number of labelled images by removing random balls
+- Convert the metadata files to annotation XML for using in RCNN
+- One of the corner x values was labelled wrong - fixed this by estimation
+- Estimated bounding box for corner pockets
+
+Comparison of Networks
+---
+- Looked at the following:
+    - Classification
+    - Detection
+    - Segmentation
+- Had to consider memory constraints
+- Different options in blog post (plus Residual Network paper)
+- Decided on Faster-RCNN due to speed and detection
+
+More Network Training
+---
+- Altered the Faster RCNN network architecture to take snooker data
+- Added extra scripts to allow for the data to be loaded
+- Split into 40k train, 4k validation
+- Used imagenet models to initialize weights - pockets weren't working otherwise
