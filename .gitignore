@@ -1,0 +1,5 @@
+*.pyc
+*.caffemodel
+*.pkl
+.ipynb_checkpoints
+.idea/

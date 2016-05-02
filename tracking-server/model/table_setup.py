@@ -11,11 +11,17 @@ class TableSetup(object):
         bbox1 = object1[:4]
         bbox2 = object2[:4]
 
-
+        # x1 >= x1 and x2 <= x2 and y1 >= y1 and y2 <= y2
+        # (P2.y <= P3.y && P1.y >= P4.y && P2.x >= P3.x && P1.x <= P4.x )
+        return bbox1[3] <= bbox2[1] and \
+            bbox1[1] >= bbox2[3] and \
+            bbox1[2] >= bbox2[0] and \
+            bbox1[0] <= bbox2[2]
 
     def _has_overlapped(self, collection):
         """
         Check whether the objects in a collection are overlapping at all
+        (CONSIDER LOOKING AT INTERVAL TREE'S FOR THIS)
         :param collection: The collection to check overlapping objects within
         :return: True if any objects overlap, false otherwise
         """
@@ -28,7 +34,7 @@ class TableSetup(object):
 
     def _update_pockets(self, pockets):
 
-        needs_updating = False
+        needs_updating = self._has_overlapped(pockets)
 
         # Check if there's any overlapping pockets, if so take care of them
         for p1 in pockets:

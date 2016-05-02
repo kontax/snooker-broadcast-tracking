@@ -28,6 +28,28 @@ class SnookerDetector(object):
                          'pocket', 'white', 'red', 'yellow', 'green',
                          'brown', 'blue', 'pink', 'black')
 
+        # Counter used for the detection frame
+        self._counter = 0
+
+        # Get the video generator to loop through
+        self._stream = self.video.play_video()
+
+        # Setup Caffe
+        if config.caffe_mode == 'CPU':
+            caffe.set_mode_cpu()
+        else:
+            caffe.set_mode_gpu()
+            caffe.set_device(config.gpu_device)
+
+        self._net = caffe.Net(self._prototxt, self._model, caffe.TEST)
+        print 'Loaded {:s}'.format(self._model)
+
+        # Warm up model
+        im = 128 * np.ones((720, 1280, 3), dtype=np.uint8)
+        for i in xrange(2):
+            _, _ = im_detect(self._net, im)
+
+
     @property
     def video(self):
         """Gets the SnookerVideo object to detect"""
@@ -73,7 +95,8 @@ class SnookerDetector(object):
 
             # Add a dictionary entry to the results where the confidence threshold
             # has been met
-            detections[c] = np.where(results[:, -1] >= cfg.conf_threshold)[0]
+            indices = np.where(results[:, -1] >= cfg.conf_threshold)[0]
+            detections[c] = results[indices, ]
 
         return detections
 
@@ -85,33 +108,14 @@ class SnookerDetector(object):
         Run the detection network for each required frame in the SnookerVideo.
         :return: A generator with the detections made by the network.
         """
-        cfg = self._config
-
-        # Get the video generator to loop through
-        stream = self.video().play_video()
-
         # We run the model every "detection_frame" frame
-        detection_frame = cfg.detection_frame
+        detection_frame = self._config.detection_frame
 
-        # Setup Caffe
-        if cfg.caffe_mode == 'CPU':
-            caffe.set_mode_cpu()
-        else:
-            caffe.set_mode_gpu()
-            caffe.set_device(cfg.gpu_device)
+        for frame in self._stream:
+            if self._counter % detection_frame == 0:
+                self._counter += 1
+                detections = self._get_detections(self._net, frame)
+                detections = self._clean(detections)
+                yield (frame, detections)
 
-        net = caffe.Net(self._prototxt, self._model, caffe.TEST)
-        print 'Loaded {:s}'.format(self._model)
-
-        # Warm up model
-        im = 128 * np.ones((720, 1280, 3), dtype=np.uint8)
-        for i in xrange(2):
-            _, _ = im_detect(net, im)
-
-        counter = 0
-        for frame in stream:
-            if counter % detection_frame == 0:
-                detections = self._get_detections(net, frame)
-                yield self._clean(detections)
-
-            counter += 1
+            self._counter += 1

@@ -18,7 +18,7 @@ class YoutubeVideo(SnookerVideo):
         stream = video.getbestvideo(preftype='m4v', ftypestrict=False)
         (width, height) = stream.dimensions
         frame_rate = 30  # Guessing default frame rate for videos
-        SnookerVideo.__init__(self, width, height, frame_rate)
+        SnookerVideo.__init__(self, url, width, height, frame_rate)
 
         # Setup OpenCV
         cap = cv2.VideoCapture()
