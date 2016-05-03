@@ -78,8 +78,8 @@ class SnookerDetector(object):
         net = caffe.Net(prototxt, model, caffe.TEST)
 
         transformer = caffe.io.Transformer({'data': net.blobs['data'].data.shape})
-        transformer.set_transpose('data', (2, 0, 1))     # move image channels
-        transformer.set_raw_scale('data', 255)           # rescale pixel numbers
+        transformer.set_transpose('data', (2, 0, 1))  # move image channels
+        transformer.set_raw_scale('data', 255)  # rescale pixel numbers
         transformer.set_channel_swap('data', (2, 1, 0))  # swap from RGB to BGR
 
         # Reshape image to batch of 1, 3 channels, H: 85, W: 150
@@ -109,7 +109,7 @@ class SnookerDetector(object):
             i += 1
 
             # Extract the bounding boxes and scores from the detected boxes
-            class_boxes = boxes[:, 4*i:4*(i + 1)]
+            class_boxes = boxes[:, 4 * i:4 * (i + 1)]
             class_scores = scores[:, i]
 
             # Stack te results into a numpy horizontal stack for NMS detection
@@ -138,7 +138,7 @@ class SnookerDetector(object):
         """
         t = self._table_transformer
 
-        # Preprocess the frame and set it as the data blob in the network
+        # Pre-process the frame and set it as the data blob in the network
         transformed_frame = t.preprocess('data', frame)
         net.blobs['data'].data[...] = transformed_frame
 
@@ -147,7 +147,6 @@ class SnookerDetector(object):
         output_prob = output['score'][0]
 
         return output_prob.argmax() == 1
-
 
     def _clean(self, detections):
         pass
@@ -168,7 +167,7 @@ class SnookerDetector(object):
                 if not self._check_validity(self._table_net, frame):
                     continue
                 detections = self._get_detections(self._net, frame)
-                #detections = self._clean(detections)
+                # detections = self._clean(detections)
                 yield (frame, detections)
 
             self._counter += 1
