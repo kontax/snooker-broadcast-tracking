@@ -1,77 +1,38 @@
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-import pylab
-import _init_paths
-import numpy as np
-from videos.youtube_video import YoutubeVideo
-from model.table_setup import TableSetup
-from model.detection import SnookerDetector
 from os import path
+
+import _init_paths
+import matplotlib.pyplot as plt
+import numpy as np
+import pylab
+
 from config import cfg
 from fast_rcnn.config import cfg as caffe_cfg
-
-
-def transpose_image():
-    print c
-    w = cfg.snooker.width * cfg.multiplier
-    h = cfg.snooker.height * cfg.multiplier
-    newimg = np.zeros(shape=(h, w, 3))
-    print "{0}".format(counter)
-    # Transpose & clean
-    # Turn into JSON
-    # Send to RabbitMQ
-    for x in xrange(len(newimg[0])):
-        for y in xrange(len(newimg)):
-            hom = c.dot(np.array([[x], [y], [1]]))
-            newx = int(hom[0] / hom[2])
-            newy = int(hom[1] / hom[2])
-            newimg[y][x] = f[newy][newx]
-    p = pylab.figure()
-    for n, x in enumerate((f, newimg)):
-        p.add_subplot(1, 2, n + 1)
-        pylab.axis('off')
-        pylab.tight_layout()
-        pylab.imshow(x, cmap='Greys_r')
-    pylab.show()
+from model.detection import SnookerDetector
+from model.table_setup import TableSetup
+from videos.youtube_video import YoutubeVideo
 
 
 def transpose_snooker_objects():
     m = cfg.multiplier
     w = cfg.snooker.width * m
     h = cfg.snooker.height * m
-    new_img = np.zeros(shape=(h, w, 3))
-    fix, ax = plt.subplots(figsize=(12, 12))
-    #ax.imshow(new_img, aspect='equal')
+    new_img = np.full(shape=(h, w, 3), fill_value=(0, 128, 0))
+    ax0.imshow(image)
+    ax1.imshow(new_img, aspect='equal')
 
-    for ind, img in enumerate((f, new_img)):
-        fix.add_subplot(1, 2, ind + 1)
-        plt.axis('off')
-        plt.tight_layout()
-        plt.imshow(img, aspect='equal')
-
-    for ball in c.balls:
+    for ball in table.balls:
         print "{0}: ({1},{2}) | ({3},{4})".format(
             ball.colour, ball.x1, ball.y1, ball.x2, ball.y2)
-        ax.add_patch(plt.Rectangle(
+        ax1.add_patch(plt.Circle(
             (ball.x1, ball.y1),
-            ball.x2 - ball.x1,
-            ball.y2 - ball.y1,
-            fill=False,
-            edgecolor=ball.colour,
-            linewidth=1))
-    # plt.axis('off')
-    for pocket in c.pockets:
-        ax.add_patch(plt.Rectangle(
-            (pocket.x1, pocket.y1),
-            pocket.x2 - pocket.x1,
-            pocket.y2 - pocket.y1,
-            fill=False,
-            edgecolor='orange',
-            linewidth=1))
+            radius=(ball.x2 - ball.x1)/2,
+            color=ball.colour,
+            fill=True))
 
     plt.tight_layout()
-    plt.draw()
-    plt.show()
+    #plt.draw()
+    plt.pause(0.05)
+    plt.cla()
 
 
 if __name__ == '__main__':
@@ -94,9 +55,13 @@ if __name__ == '__main__':
                                prototxt=prototxt,
                                table_model=table_model,
                                table_prototxt=table_prototxt)
-    cleaner = TableSetup(cfg)
+    table_factory = TableSetup(cfg)
+
+    plt.ion()
+    fix, (ax0, ax1) = plt.subplots(1, 2, sharey=True, figsize=(12, 12))
 
     detections = detector.detect()
     for image, detection in detections:
-        table = cleaner.clean_predictions(detection)
+        table = table_factory.create_table(detection)
+        #transpose_snooker_objects()
 

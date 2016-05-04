@@ -5,6 +5,8 @@ from table_objects import SnookerTable
 
 
 class TableSetup(object):
+    """A factory class used to create a SnookerTable from network predictions"""
+
     def __init__(self, config):
         self._config = config
         self._transformation_matrix = np.zeros(shape=(3, 3), dtype=np.float32)
@@ -169,8 +171,13 @@ class TableSetup(object):
 
         return output
 
-    def clean_predictions(self, detections):
-
+    def _clean_predictions(self, detections):
+        """
+        Takes the detections that are made by the network and clean any based on the
+        rules of the game, eg. Removing double counted colour balls.
+        :param detections: The predictions made by the network
+        :return: A tuple containing a collection of balls and pockets
+        """
         # Extract predictions as TableObject's
         pockets = [Pocket(p) for p in detections['pocket']]
         ball_detections = [(key, value) for key, value
@@ -185,6 +192,19 @@ class TableSetup(object):
 
         # Clean the pocket predictions
         pockets = self._remove_overlapping_pockets(pockets)
+
+        return balls, pockets
+
+    def create_table(self, detections):
+        """
+        Creates a SnookerTable object containing a collection of Pocket and
+        SnookerBall objects based on the detections made by the network. The bounding
+        boxes of the TableObjects get transposed to a top-down view.
+        :param detections: The predictions made by the neural network
+        :return: A SnookerTable object populated with TableObjects
+        """
+        # Clean the predictions
+        balls, pockets = self._clean_predictions(detections)
 
         # Set the transformation matrix
         self._set_transformation(pockets)
