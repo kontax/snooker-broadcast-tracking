@@ -1,6 +1,7 @@
 import numpy as np
 from table_objects import Pocket
 from table_objects import SnookerBall
+from table_objects import SnookerTable
 
 
 class TableSetup(object):
@@ -9,14 +10,15 @@ class TableSetup(object):
         self._transformation_matrix = np.zeros(shape=(3, 3), dtype=np.float32)
         self._object_counts = {
             "pocket": 4, "red": 15, "yellow": 1, "green": 1,
-            "brown": 1, "blue": 1, "pink": 1, "black": 1}
+            "brown": 1, "blue": 1, "pink": 1, "black": 1, "white": 1}
 
     @property
     def transformation_matrix(self):
         """The transformation matrix used to view objects from a top-down view"""
         return self._transformation_matrix
 
-    def _get_overlapped(self, collection):
+    @staticmethod
+    def _get_overlapped(collection):
         """
         Checks a collection of objects and returns all of those that overlap at all.
         (CONSIDER LOOKING AT INTERVAL TREE'S FOR THIS)
@@ -59,6 +61,30 @@ class TableSetup(object):
         # Recursively run the function in case multiple overlaps exist
         return self._remove_overlapping_pockets(pockets)
 
+    @staticmethod
+    def _sort_pockets(pockets):
+        """
+        Sorts the specified Pocket collection in order of bottom-left, bottom-right,
+        top-left, top-right.
+        :param pockets: The collection of Pocket objects to sort
+        :return: A sorted collection of Pocket objects
+        """
+        # Sort Top to Bottom and extract
+        pockets.sort(key=lambda x: x.y1)
+        top_pockets = pockets[:2]
+        bottom_pockets = pockets[2:]
+
+        # Sort Left to Right inline
+        top_pockets.sort(key=lambda x: x.x1)
+        bottom_pockets.sort(key=lambda x: x.x1)
+
+        top_left = top_pockets[0]
+        top_right = top_pockets[1]
+        bottom_left = bottom_pockets[0]
+        bottom_right = bottom_pockets[1]
+
+        return bottom_left, bottom_right, top_left, top_right
+
     def _set_transformation(self, pockets):
         """
         Sets the transformation matrix used for converting the region predictions to
@@ -71,20 +97,16 @@ class TableSetup(object):
         if len(pockets) != 4:
             return
 
-        # The top and bottom pockets need to be differentiated as the bottom-left
-        # corner is taken from the top pockets, and the top-right corner is taken
-        # from the bottom pockets
-        pockets.sort(key=lambda x: x.y1)
-        top_pockets = pockets[:2]
-        bottom_pockets = pockets[2:]
-        top_pockets.sort(key=lambda x: x.x1)
-        bottom_pockets.sort(key=lambda x: x.x1)
+        # Differentiate between the bottom/top and left/right pockets, as the order
+        # of each is important for knowing which point transposes to which.
+
+        bottom_left, bottom_right, top_left, top_right = self._sort_pockets(pockets)
 
         # Get the four points
-        p1 = (bottom_pockets[0].x2, bottom_pockets[0].y1)
-        p2 = (top_pockets[0].x2, top_pockets[0].y2)
-        p3 = (top_pockets[1].x2, top_pockets[1].y2)
-        p4 = (bottom_pockets[1].x2, bottom_pockets[1].y1)
+        p1 = (bottom_left.x2, bottom_left.y1)
+        p2 = (top_left.x2, top_left.y2)
+        p3 = (top_right.x1, top_right.y2)
+        p4 = (bottom_right.x1, bottom_right.y1)
 
         # Put three into a 3D matrix
         mat = np.array([[p1[0], p2[0], p3[0]],
@@ -120,7 +142,32 @@ class TableSetup(object):
         B = mat * np.transpose(s)
 
         # Invert B and multiply it by A to get the final matrix
-        self._transformation_matrix = A.dot(np.linalg.inv(B))
+        self._transformation_matrix = B.dot(np.linalg.inv(A))
+
+    def _remove_extra_balls(self, colour, detections):
+        """
+        Occasionally the network will predict overlapping bounding boxes for balls
+        where there is only one. This cannot be fully overcome here (especially for
+        red balls where there are multiple on the table), however the best prediction
+        is taken in each case.
+        :param colour: The colour of the predicted snooker ball
+        :param detections: The collection of detections made
+        :return: The maximum allowed number of detections
+        """
+        max_allowed = self._object_counts[colour]
+        if len(detections) <= max_allowed:
+            return detections
+
+        # Sort detections by confidence in descending order
+        sorted_detections = detections[np.argsort(detections[:, 4])]
+
+        # Loop through the sorted list until the maximum is reached, adding them
+        # to the new collection
+        output = []
+        for i in xrange(max_allowed):
+            output.append(sorted_detections[i])
+
+        return output
 
     def clean_predictions(self, detections):
 
@@ -132,12 +179,25 @@ class TableSetup(object):
 
         balls = []
         for colour, detections in ball_detections:
+            detections = self._remove_extra_balls(colour, detections)
             for detection in detections:
                 balls.append(SnookerBall(detection, colour))
 
         # Clean the pocket predictions
-        updated_pockets = self._remove_overlapping_pockets(pockets)
+        pockets = self._remove_overlapping_pockets(pockets)
 
         # Set the transformation matrix
-        self._set_transformation(updated_pockets)
-        return self._transformation_matrix
+        self._set_transformation(pockets)
+
+        # Transpose each ball
+        for ball in balls:
+            d = self._config.snooker.diameter * self._config.multiplier
+            ball.transpose(self._transformation_matrix, d, d)
+
+        # Transpose the pockets if there are 4
+        if len(pockets) == 4:
+            pockets = self._sort_pockets(pockets)
+            for i in xrange(4):
+                pockets[i].transpose_and_reshape(self._transformation_matrix, i)
+
+        return SnookerTable(pockets, balls)

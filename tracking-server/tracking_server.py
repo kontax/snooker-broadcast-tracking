@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import pylab
 import _init_paths
 import numpy as np
 from videos.youtube_video import YoutubeVideo
@@ -7,6 +9,70 @@ from model.detection import SnookerDetector
 from os import path
 from config import cfg
 from fast_rcnn.config import cfg as caffe_cfg
+
+
+def transpose_image():
+    print c
+    w = cfg.snooker.width * cfg.multiplier
+    h = cfg.snooker.height * cfg.multiplier
+    newimg = np.zeros(shape=(h, w, 3))
+    print "{0}".format(counter)
+    # Transpose & clean
+    # Turn into JSON
+    # Send to RabbitMQ
+    for x in xrange(len(newimg[0])):
+        for y in xrange(len(newimg)):
+            hom = c.dot(np.array([[x], [y], [1]]))
+            newx = int(hom[0] / hom[2])
+            newy = int(hom[1] / hom[2])
+            newimg[y][x] = f[newy][newx]
+    p = pylab.figure()
+    for n, x in enumerate((f, newimg)):
+        p.add_subplot(1, 2, n + 1)
+        pylab.axis('off')
+        pylab.tight_layout()
+        pylab.imshow(x, cmap='Greys_r')
+    pylab.show()
+
+
+def transpose_snooker_objects():
+    m = cfg.multiplier
+    w = cfg.snooker.width * m
+    h = cfg.snooker.height * m
+    new_img = np.zeros(shape=(h, w, 3))
+    fix, ax = plt.subplots(figsize=(12, 12))
+    #ax.imshow(new_img, aspect='equal')
+
+    for ind, img in enumerate((f, new_img)):
+        fix.add_subplot(1, 2, ind + 1)
+        plt.axis('off')
+        plt.tight_layout()
+        plt.imshow(img, aspect='equal')
+
+    for ball in c.balls:
+        print "{0}: ({1},{2}) | ({3},{4})".format(
+            ball.colour, ball.x1, ball.y1, ball.x2, ball.y2)
+        ax.add_patch(plt.Rectangle(
+            (ball.x1, ball.y1),
+            ball.x2 - ball.x1,
+            ball.y2 - ball.y1,
+            fill=False,
+            edgecolor=ball.colour,
+            linewidth=1))
+    # plt.axis('off')
+    for pocket in c.pockets:
+        ax.add_patch(plt.Rectangle(
+            (pocket.x1, pocket.y1),
+            pocket.x2 - pocket.x1,
+            pocket.y2 - pocket.y1,
+            fill=False,
+            edgecolor='orange',
+            linewidth=1))
+
+    plt.tight_layout()
+    plt.draw()
+    plt.show()
+
 
 if __name__ == '__main__':
 
@@ -30,29 +96,7 @@ if __name__ == '__main__':
                                table_prototxt=table_prototxt)
     cleaner = TableSetup(cfg)
 
-    x = detector.detect()
-    counter = 0
-    for f, d in x:
-        c = cleaner.clean_predictions(d)
-        print c
-        newimg = np.zeros(shape=(1280, 720, 3))
-        #print "{0} : {1}".format(counter, x)
-        # Transpose & clean
-        # Turn into JSON
-        # Send to RabbitMQ
-        for x in xrange(len(f)):
-            for y in xrange(len(f[0])):
-                hom = c.dot(np.array([[x], [y], [1]]))
-                newx = int(hom[0]/hom[2])
-                newy = int(hom[1]/hom[2])
+    detections = detector.detect()
+    for image, detection in detections:
+        table = cleaner.clean_predictions(detection)
 
-                try:
-                    newimg[y][x] = f[newy][newx]
-                except:
-                    continue
-
-        plt.imshow(newimg)
-        plt.imshow(f)
-
-        plt.show()
-        counter += 1
