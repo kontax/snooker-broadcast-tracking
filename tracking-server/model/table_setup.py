@@ -53,12 +53,20 @@ class TableSetup(object):
         if len(overlapping) == 0 and len(pockets) <= 4:
             return pockets
 
+        original_count = len(pockets)
+
         # Otherwise we need to get the best fit
         for p1, p2 in overlapping:
             if p1.confidence >= p2.confidence:
-                pockets.remove(p2)
+                if p2 in pockets:
+                    pockets.remove(p2)
             else:
-                pockets.remove(p1)
+                if p1 in pockets:
+                    pockets.remove(p1)
+
+        # If there are no changes then don't bother continuing
+        if len(pockets) == original_count:
+            return pockets
 
         # Recursively run the function in case multiple overlaps exist
         return self._remove_overlapping_pockets(pockets)
@@ -66,8 +74,8 @@ class TableSetup(object):
     @staticmethod
     def _sort_pockets(pockets):
         """
-        Sorts the specified Pocket collection in order of bottom-left, bottom-right,
-        top-left, top-right.
+        Sorts the specified Pocket collection in order of top_left, bottom-left,
+        bottom-right, top-right.
         :param pockets: The collection of Pocket objects to sort
         :return: A sorted collection of Pocket objects
         """
@@ -85,7 +93,7 @@ class TableSetup(object):
         bottom_left = bottom_pockets[0]
         bottom_right = bottom_pockets[1]
 
-        return bottom_left, bottom_right, top_left, top_right
+        return top_left, bottom_left, bottom_right, top_right
 
     def _set_transformation(self, pockets):
         """
@@ -102,7 +110,7 @@ class TableSetup(object):
         # Differentiate between the bottom/top and left/right pockets, as the order
         # of each is important for knowing which point transposes to which.
 
-        bottom_left, bottom_right, top_left, top_right = self._sort_pockets(pockets)
+        top_left, bottom_left, bottom_right, top_right = self._sort_pockets(pockets)
 
         # Get the four points
         p1 = (bottom_left.x2, bottom_left.y1)
@@ -195,6 +203,11 @@ class TableSetup(object):
 
         return balls, pockets
 
+    def create_table_test(self, detections, i):
+        if i == 100:
+            test = "here"
+        return self.create_table(detections)
+
     def create_table(self, detections):
         """
         Creates a SnookerTable object containing a collection of Pocket and
@@ -206,7 +219,17 @@ class TableSetup(object):
         # Clean the predictions
         balls, pockets = self._clean_predictions(detections)
 
-        # Set the transformation matrix
+        # If that didn't work, continue and wait
+        if len(pockets) > 4:
+            return None
+
+        # If no valid predictions have been made continue and wait
+        if np.array_equal(
+                self._transformation_matrix,
+                np.zeros(shape=(3, 3), dtype=np.float32)) and len(pockets) < 4:
+            return None
+
+            # Set the transformation matrix
         self._set_transformation(pockets)
 
         # Transpose each ball
@@ -218,6 +241,7 @@ class TableSetup(object):
         if len(pockets) == 4:
             pockets = self._sort_pockets(pockets)
             for i in xrange(4):
-                pockets[i].transpose_and_reshape(self._transformation_matrix, i)
+                pockets[i].location = i
+                pockets[i].transpose_and_reshape(self._transformation_matrix)
 
         return SnookerTable(pockets, balls)

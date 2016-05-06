@@ -11,23 +11,19 @@ class SnookerDetector(object):
     classifications and detections.
     """
 
-    def __init__(self, config, video, model, prototxt, table_model, table_prototxt):
+    def __init__(self, config, video, detection_model, table_model):
         """
         Instantiates a new SnookerDetector, used to output the detections of a
         trained network.
         :param config: The configuration details within a Config class
         :param video: The SnookerVideo containing the video details to detect
-        :param model: The CaffeModel file containing the model weights
-        :param prototxt: The solver prototxt with the model architecture
-        :param table_model: The weights for the table detection model
-        :param table_prototxt: The solver prototxt for the table detection model
+        :param detection_model: The CaffeModel used for detection
+        :param table_model: The CaffeModel used for validating the image is a table
         """
         self._config = config
         self._video = video
-        self._model = model
-        self._prototxt = prototxt
+        self._detection_model = detection_model
         self._table_model = table_model
-        self._table_prototxt = table_prototxt
         self._classes = ('__background__',
                          'pocket', 'white', 'red', 'yellow', 'green',
                          'brown', 'blue', 'pink', 'black')
@@ -46,10 +42,12 @@ class SnookerDetector(object):
             caffe.set_device(config.gpu_device)
 
         # Set up the model to detect the image of tables
-        self._setup_table_net(table_prototxt, table_model)
+        self._setup_table_net(table_model)
 
-        self._net = caffe.Net(prototxt, model, caffe.TEST)
-        print 'Loaded {:s}'.format(model)
+        self._net = caffe.Net(
+            detection_model.prototxt, detection_model.weights, caffe.TEST)
+
+        print 'Loaded {:s}'.format(detection_model.prototxt)
 
         # Warm up model
         im = 128 * np.ones((720, 1280, 3), dtype=np.uint8)
@@ -66,16 +64,15 @@ class SnookerDetector(object):
         """Sets the SnookerVideo object to detect"""
         self._video = value
 
-    def _setup_table_net(self, prototxt, model):
+    def _setup_table_net(self, caffe_model):
         """
         Set up the simple network that outputs whether the image specified is valid
         for performing object detection on. Only those images that have the full
         table from the top cushion should be used.
-        :param prototxt: The prototxt file outlining the model architecture
-        :param model: The weights of the trained model
+        :param caffe_model: The model to set up
         :return:
         """
-        net = caffe.Net(prototxt, model, caffe.TEST)
+        net = caffe.Net(caffe_model.prototxt, caffe_model.weights, caffe.TEST)
 
         transformer = caffe.io.Transformer({'data': net.blobs['data'].data.shape})
         transformer.set_transpose('data', (2, 0, 1))  # move image channels
@@ -160,6 +157,9 @@ class SnookerDetector(object):
         detection_frame = self._config.detection_frame
 
         for frame in self._stream:
+            if frame is None:
+                return
+
             if self._counter % detection_frame == 0:
                 self._counter += 1
 
