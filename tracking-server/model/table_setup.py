@@ -203,11 +203,6 @@ class TableSetup(object):
 
         return balls, pockets
 
-    def create_table_test(self, detections, i):
-        if i == 100:
-            test = "here"
-        return self.create_table(detections)
-
     def create_table(self, detections):
         """
         Creates a SnookerTable object containing a collection of Pocket and
