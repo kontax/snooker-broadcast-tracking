@@ -1,6 +1,10 @@
 import os.path as osp
 import sys
 
+# Fix error when using application over SSH
+import matplotlib
+matplotlib.use('Agg')
+
 
 def add_path(path):
     if path not in sys.path:
