@@ -41,12 +41,7 @@ echo 'export PATH=$PATH:/usr/local/cuda/bin' >> /home/$user/.bashrc
 echo 'export LD_LIBRARY_PATH=:/usr/local/cuda/lib64' >> /home/$user/.bashrc
 source /home/$user/.bashrc
 
-echo -e "\n  [x] Installing Caffe dependencies (~20 mins)\n"
-apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libboost-all-dev libhdf5-serial-dev protobuf-compiler gfortran libjpeg62 libfreeimage-dev libatlas-base-dev git python-dev python-pip libgoogle-glog-dev libbz2-dev libxml2-dev libxslt-dev libffi-dev libssl-dev libgflags-dev liblmdb-dev python-yaml python-numpy python-opencv rabbitmq-server
-easy_install pillow
-
 cd tracking-server/py-faster-rcnn/caffe-fast-rcnn/
-cat python/requirements.txt | xargs -L 1 pip install
 
 echo -e "\n  [x] Bulding configuration file for Caffe\n"
 cat > Makefile.config << EOF

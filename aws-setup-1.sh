@@ -22,15 +22,20 @@ if [[ $system != 'Ubuntu' || $version != "14.04" ]]; then
     exit 1
 fi
 
-echo -e "\n  [x] Installing build-essential if not already done\n"
+echo -e "\n  [x] Installing caffe binary dependencies\n"
 apt-get update
-apt-get -y install build-essential
+apt-get -y install build-essential libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libboost-all-dev libhdf5-serial-dev protobuf-compiler gfortran libjpeg62 libfreeimage-dev libatlas-base-dev git python-dev python-pip libgoogle-glog-dev libbz2-dev libxml2-dev libxslt-dev libffi-dev libssl-dev libgflags-dev liblmdb-dev python-yaml python-numpy python-opencv rabbitmq-server
+easy_install pillow
+cp tracking-server/rabbitmq.config /etc/rabbitmq/
+
+echo -e "\n  [x] Installing caffe python dependencies (~20 mins)\n"
+cat tracking-server/py-faster-rcnn/caffe-fast-rcnn/python/requirements.txt | xargs -L 1 pip install
+pip install easydict pika pafy
+sed -i 's/, unquote_plus/\n    from urllib import unquote_plus/g' /usr/local/lib/python2.7/dist-packages/pafy/backend_internal.py
+rm /usr/local/lib/python2.7/dist-packages/pafy/backend_internal.pyc
 
 echo -e "\n  [x] Adding drivers and downloaded repository to repo list\n"
 add-apt-repository -y ppa:graphics-drivers/ppa
-
-echo -e "\n  [x] Updating the image for NVIDIA driver compatibility\n"
-apt-get -y install linux-image-extra-virtual 
 
 echo -e "\n  [x] Blacklisting Nouveau\n"
 cat > /etc/modprobe.d/blacklist-nouveau.conf << EOF
