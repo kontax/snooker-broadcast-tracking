@@ -79,6 +79,7 @@ pip install easydict pika pafy
 
 # Issue with pafy not using the correct libraries
 sed -i 's/, unquote_plus/\n    from urllib import unquote_plus/g' /usr/local/lib/python2.7/dist-packages/pafy/backend_internal.py
+rm /usr/local/lib/python2.7/dist-packages/pafy/backend_internal.pyc
 
 echo -e "\n  [x] Configuring the rabbitmq server\n"
 cd ../../
@@ -87,4 +88,5 @@ cp rabbitmq.config /etc/rabbitmq/
 rabbitmqctl reset
 
 
-echo -e "\n  [x] Installation is complete."
+echo -e "\n  [x] Installation is complete. Please restart and run the tracking server."
+
