@@ -31,6 +31,7 @@ modprobe nvidia
 echo -e "Downloading CUDA Web Installer\n"
 curl -o /tmp/cuda-repo.deb "http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/cuda-repo-ubuntu1404_7.5-18_amd64.deb"
 dpkg -i /tmp/cuda-repo.deb
+apt-get update
 
 echo -e "Installing CUDA - this should take about 10 minutes\n"
 apt-get -y install cuda
