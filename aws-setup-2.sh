@@ -44,15 +44,10 @@ source /home/$user/.bashrc
 echo -e "\n  [x] Installing Caffe dependencies (~20 mins)\n"
 apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libboost-all-dev libhdf5-serial-dev protobuf-compiler gfortran libjpeg62 libfreeimage-dev libatlas-base-dev git python-dev python-pip libgoogle-glog-dev libbz2-dev libxml2-dev libxslt-dev libffi-dev libssl-dev libgflags-dev liblmdb-dev python-yaml python-numpy python-opencv rabbitmq-server
 easy_install pillow
-cp rabbitmq.config /etc/rabbitmq/
 pip install easydict pika pafy
 
-# Issue with pafy not using the correct libraries
-sed -i 's/, unquote_plus/\n    from urllib import unquote_plus/g' /usr/local/lib/python2.7/dist-packages/pafy/backend_internal.py
-rm /usr/local/lib/python2.7/dist-packages/pafy/backend_internal.pyc
-
-
 cd tracking-server/py-faster-rcnn/caffe-fast-rcnn/
+cat python/requirements.txt | xargs -L 1 pip install
 
 echo -e "\n  [x] Bulding configuration file for Caffe\n"
 cat > Makefile.config << EOF
@@ -81,9 +76,14 @@ cd ../lib
 sed -i 's/arch=sm_../arch=sm_30/g' setup.py
 make
 
+# Issue with pafy not using the correct libraries
+sed -i 's/, unquote_plus/\n    from urllib import unquote_plus/g' /usr/local/lib/python2.7/dist-packages/pafy/backend_internal.py
+rm /usr/local/lib/python2.7/dist-packages/pafy/backend_internal.pyc
+
 echo -e "\n  [x] Configuring the rabbitmq server\n"
 cd ../../
 chown -R $user:$user ./*
+cp rabbitmq.config /etc/rabbitmq/
 
-echo -e "\n  [x] Installation is complete. Please restart and run the tracking server."
 
+echo -e "\n  [x] Installation is complete."
