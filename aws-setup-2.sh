@@ -72,7 +72,7 @@ make -j8 && make pycaffe
 
 cd ../lib
 # Fix the architecture issue with AWS
-sed -i 's/sm_35/sm_30/g' setup.py
+sed -i 's/arch=sm_../arch=sm_30/g' setup.py
 make
 
 pip install easydict pika pafy
@@ -83,7 +83,7 @@ rm /usr/local/lib/python2.7/dist-packages/pafy/backend_internal.pyc
 
 echo -e "\n  [x] Configuring the rabbitmq server\n"
 cd ../../
-chown -R $(user):$(user) ./*
+chown -R $user:$user ./*
 cp rabbitmq.config /etc/rabbitmq/
 rabbitmqctl reset
 
