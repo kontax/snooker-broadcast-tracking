@@ -1,5 +1,6 @@
 #!/bin/bash
-# Install's cuda and it's dependencies on an ubuntu 14.04 system.
+# Install's the rest of the 
+
 # Largely taken from steps outlined at:
 #  https://github.com/BVLC/caffe/wiki/Install-Caffe-on-EC2-from-scratch-(Ubuntu,-CUDA-7,-cuDNN)
 
@@ -14,6 +15,7 @@ fi
 # Ensure the system requirements are met
 system=$(lsb_release -i | awk '{print $3}')
 version=$(lsb_release -r | awk '{print $2}')
+user=$(who am i | awk '{print $1}')
 
 if [[ $system != 'Ubuntu' || $version != "14.04" ]]; then
     echo "This script needs to be run on Ubuntu 14.04" 1>&2
@@ -21,20 +23,14 @@ if [[ $system != 'Ubuntu' || $version != "14.04" ]]; then
 fi
 
 echo -e "Installing build-essential if not already done\n"
+apt-get update
 apt-get -y install build-essential
 
-echo -e "Downloading CUDA Web Installer\n"
-curl -o /tmp/cuda-repo.deb "http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/cuda-repo-ubuntu1404_7.5-18_amd64.deb"
-
-echo -e "Adding downloaded repository to repo list\n"
-dpkg -i /tmp/cuda-repo.deb
-
-echo -e "Installing CUDA - this should take about 10 minutes\n"
-apt-get update
-apt-get -y install cuda
+echo -e "Adding drivers and downloaded repository to repo list\n"
+add-apt-repository -y ppa:graphics-drivers/ppa
 
 echo -e "Updating the image for NVIDIA driver compatibility\n"
-apt-get -y install linux-image-extra-virtual
+apt-get -y install linux-image-extra-virtual 
 
 echo -e "Blacklisting Nouveau\n"
 cat > /etc/modprobe.d/blacklist-nouveau.conf << EOF
@@ -48,4 +44,4 @@ EOF
 echo options nouveau modeset=0 > /etc/modprobe.d/nouveau-kms.conf
 update-initramfs -u
 
-echo -e "\nInstallation is complete.\nPlease restart the system before continuing.\n"
+echo -e "\nFirst step of installation is complete.\nPlease restart the system before continuing.\n"
