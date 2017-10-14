@@ -42,7 +42,7 @@ echo 'export LD_LIBRARY_PATH=:/usr/local/cuda/lib64' >> /home/$user/.bashrc
 source /home/$user/.bashrc
 
 echo -e "\n  [x] Installing Caffe dependencies (~20 mins)\n"
-apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libboost-all-dev libhdf5-serial-dev protobuf-compiler gfortran libjpeg62 libfreeimage-dev libatlas-base-dev git python-dev python-pip libgoogle-glog-dev libbz2-dev libxml2-dev libxslt-dev libffi-dev libssl-dev libgflags-dev liblmdb-dev python-yaml python-numpy python-opencv rabbitmq-server
+apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libboost-all-dev libhdf5-serial-dev protobuf-compiler gfortran libjpeg62 libfreeimage-dev libatlas-base-dev git python-dev python-pip libgoogle-glog-dev libbz2-dev libxml2-dev libxslt-dev libffi-dev libssl-dev libgflags-dev liblmdb-dev python-yaml python-numpy python-opencv rabbitmq-server cmake
 easy_install pillow
 pip install easydict pika pafy
 
@@ -69,6 +69,7 @@ Q ?= @
 EOF
 
 echo -e "\n  [x] Installing Caffe (~10 mins)\n"
+cmake .
 make -j8 && make pycaffe
 
 cd ../lib
